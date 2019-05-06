@@ -1,0 +1,26 @@
+{
+  "name": "slack-clone-presentation",
+  "version": "1.0.0",
+  "main": "./dist/main.js",
+  "license": "MIT",
+  "author": {
+    "name": "Danut Codrescu",
+    "email": "danutzcodrescu@gmail.com"
+  },
+  "description": "slide presentation for slack clone project made with mdx-deck",
+  "keywords": [
+    "react",
+    "mdx-deck",
+    "emotion"
+  ],
+  "dependencies": {
+    "@mdx-deck/export": "^2.3.2",
+    "mdx-deck": "^2.3.2"
+  },
+  "scripts": {
+    "start": "mdx-deck deck.mdx",
+    "build": "cp -r static dist/static && mdx-deck build deck.mdx",
+    "build-pdf": "npx mdx-deck-export pdf deck.mdx",
+    "deploy": "netlify deploy --prod --dir dist"
+  }
+}
