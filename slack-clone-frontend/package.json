@@ -16,7 +16,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "posttest": "npm run format",
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"**/*.{js,css,md,ts,tsx}\"",
+    "prebuild": "tsc"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,6 +34,26 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "husky": ">=1",
+    "lint-staged": ">=8",
+    "prettier": "^1.17.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{js,ts,tsx}": [
+      "eslint",
+      "git add"
     ]
   }
 }
