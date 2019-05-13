@@ -1,0 +1,4 @@
+[build]
+  base = "slack-clone-frontend/"
+  publish = "slack-clone-frontend/dist/"
+  command = "yarn build"
