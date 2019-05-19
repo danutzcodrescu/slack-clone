@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "cp -r static dist/static && mdx-deck build deck.mdx",
+    "build": "cp -r static dist/ && mdx-deck build deck.mdx",
     "build-pdf": "npx mdx-deck-export pdf deck.mdx",
     "deploy": "netlify deploy --prod --dir dist"
   }
