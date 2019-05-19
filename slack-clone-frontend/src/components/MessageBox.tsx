@@ -1,5 +1,37 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Query, Subscription } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const messageQuery = gql`
+  {
+    Mesage(
+      where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
+    ) {
+      id
+      body
+      date
+      User {
+        username
+      }
+    }
+  }
+`;
+
+const messageSubscription = gql`
+  subscription {
+    Mesage(
+      where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
+    ) {
+      id
+      date
+      body
+      User {
+        username
+      }
+    }
+  }
+`;
 
 const Container = styled.div`
   margin-top: 85px;
@@ -23,6 +55,15 @@ const DateSpan = styled.span`
   color: darkgrey;
 `;
 
+interface Message {
+  id: string;
+  body: string;
+  date: string;
+  User: {
+    username: string;
+  };
+}
+
 export function MessageBox() {
   const messageListRef = React.createRef<HTMLDivElement>();
 
@@ -33,116 +74,41 @@ export function MessageBox() {
     );
   }, [messageListRef]);
 
-  const messages = [
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    },
-    {
-      message: 'Deleniti delectus hic soluta ratione sunt voluptates ut.',
-      user: 'Edwardo_Stiedemann56',
-      date: 'Sat May 11 2019 05:24:35 GMT+0200 (CEST)'
-    }
-  ];
+  const subscription = (subscribeToMore: any) => {
+    subscribeToMore({
+      document: messageSubscription,
+      updateQuery: (prev: Message[], { subscriptionData }: any) => {
+        if (!subscriptionData.data) return prev;
+        return subscriptionData.data;
+      }
+    });
+  };
+
   return (
-    <Container ref={messageListRef}>
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            <Username>{message.user}</Username>
-            <DateSpan>
-              {new Intl.DateTimeFormat('en-GB').format(new Date(message.date))}
-            </DateSpan>
-            <p>{message.message}</p>
-          </li>
-        ))}
-      </ul>
-    </Container>
+    <Query query={messageQuery}>
+      {({ loading, error, data, subscribeToMore }: any) => {
+        subscription(subscribeToMore);
+        return (
+          <Container ref={messageListRef}>
+            <ul>
+              {!loading && data.Mesage
+                ? (data.Mesage as Message[]).map((message, index) => {
+                    return (
+                      <li key={message.id}>
+                        <Username>{message.User.username}</Username>
+                        <DateSpan>
+                          {/* {new Intl.DateTimeFormat('en-GB').format(new Date(message.date))} */}
+                          {message.date}
+                        </DateSpan>
+                        <p>{message.body}</p>
+                      </li>
+                    );
+                  })
+                : null}
+            </ul>
+          </Container>
+        );
+      }}
+    </Query>
   );
 }

@@ -1,7 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Channels } from './Channels';
+import { Channels, Channel } from './Channels';
 import { DirectMessages } from './DirectMessage';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import { ApolloQueryResult } from 'apollo-boost';
+
+const membershipQuery = gql`
+  {
+    Membership(where: { userId: { _eq: "user1" } }) {
+      id
+      direct
+      Chanel {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const SidebarContainer = styled.div`
   height: 100%;
@@ -38,22 +54,50 @@ export const Status = styled.span`
   display: inline-block;
 `;
 
+interface Membership {
+  direct: boolean;
+  id: string;
+  Chanel: Channel;
+}
+
 export function Sidebar() {
   return (
-    <SidebarContainer>
-      <Header>
-        <H1>Slack clone</H1>
-        <div>
-          <i className="far fa-bell" />
-           
-        </div>
-        <UsernameContainer>
-          <Status />
-          John Doe
-        </UsernameContainer>
-      </Header>
-      <Channels />
-      <DirectMessages />
-    </SidebarContainer>
+    <Query query={membershipQuery}>
+      {({ loading, error, data }: any) => (
+        <SidebarContainer>
+          <Header>
+            <H1>Slack clone</H1>
+            <div>
+              <i className="far fa-bell" /> 
+            </div>
+            <UsernameContainer>
+              <Status />
+              John Doe
+            </UsernameContainer>
+          </Header>
+          {!loading && data.Membership ? (
+            <>
+              <Channels
+                channels={(data.Membership as Membership[])
+                  .filter(membership => !membership.direct)
+                  .map(membership => membership.Chanel)}
+              />
+              <DirectMessages
+                channels={(data.Membership as Membership[]).reduce(
+                  (acc, value) => {
+                    if (value.direct) {
+                      return [...acc, value.Chanel];
+                    }
+
+                    return acc;
+                  },
+                  [] as Channel[]
+                )}
+              />
+            </>
+          ) : null}
+        </SidebarContainer>
+      )}
+    </Query>
   );
 }

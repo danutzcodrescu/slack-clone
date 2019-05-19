@@ -31,14 +31,23 @@ const Button = styled.button`
   }
 `;
 
-export function Channels() {
-  const channels = [
-    'announcements',
-    'general',
-    'frontend',
-    'backend',
-    'random'
-  ];
+export interface Channel {
+  id: string;
+  name: string;
+}
+
+interface ChanelProps {
+  channels: Channel[];
+}
+
+export function Channels({ channels }: ChanelProps) {
+  // const channels = [
+  //   'announcements',
+  //   'general',
+  //   'frontend',
+  //   'backend',
+  //   'random'
+  // ];]
   return (
     <>
       <ChannelsTitles>
@@ -47,7 +56,7 @@ export function Channels() {
       </ChannelsTitles>
       <ul>
         {channels.map(channel => (
-          <ChannelItem key={channel}># {channel}</ChannelItem>
+          <ChannelItem key={channel.id}># {channel.name}</ChannelItem>
         ))}
       </ul>
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Status } from './Sidebar';
+import { Channel } from './Channels';
 
 const MessagesTitles = styled.div`
   margin: 2rem 0 1rem;
@@ -18,14 +19,11 @@ const MessageItem = styled.li`
   margin: 0.25rem 0;
 `;
 
-export function DirectMessages() {
-  const channels = [
-    'Bot',
-    'Jane Doe',
-    'Lance Amstrong',
-    'Johny Depp',
-    'Miley Cyrus'
-  ];
+interface DirectMessageProps {
+  channels: Channel[];
+}
+
+export function DirectMessages({ channels }: DirectMessageProps) {
   return (
     <>
       <MessagesTitles>
@@ -34,8 +32,8 @@ export function DirectMessages() {
       </MessagesTitles>
       <ul>
         {channels.map(channel => (
-          <MessageItem key={channel}>
-            <Status /> {channel}
+          <MessageItem key={channel.id}>
+            <Status /> {channel.name}
           </MessageItem>
         ))}
       </ul>
