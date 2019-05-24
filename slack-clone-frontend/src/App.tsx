@@ -1,11 +1,13 @@
 import React from 'react';
 import { Layout } from './components/Layout';
 
-import { split, HttpLink, InMemoryCache } from 'apollo-boost';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { split } from 'apollo-link';
 
 const wsLink = new WebSocketLink({
   uri: `wss://slack-clone-hasura.herokuapp.com/v1/graphql`,
