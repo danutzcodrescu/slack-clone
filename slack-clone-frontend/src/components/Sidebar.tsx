@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { Channels, Channel } from './Channels';
 import { DirectMessages } from './DirectMessage';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import { ApolloQueryResult } from 'apollo-boost';
+import { Query, QueryResult } from 'react-apollo';
 
 const membershipQuery = gql`
   {
@@ -68,7 +67,8 @@ export function Sidebar() {
           <Header>
             <H1>Slack clone</H1>
             <div>
-              <i className="far fa-bell" /> 
+              <i className="far fa-bell" />
+               
             </div>
             <UsernameContainer>
               <Status />
