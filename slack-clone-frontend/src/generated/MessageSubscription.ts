@@ -28,3 +28,7 @@ export interface MessageSubscription {
    */
   Mesage: MessageSubscription_Mesage[];
 }
+
+export interface MessageSubscriptionVariables {
+  channelId?: any | null;
+}

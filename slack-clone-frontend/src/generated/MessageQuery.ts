@@ -28,3 +28,7 @@ export interface MessageQuery {
    */
   Mesage: MessageQuery_Mesage[];
 }
+
+export interface MessageQueryVariables {
+  channelId?: any | null;
+}

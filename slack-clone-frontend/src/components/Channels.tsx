@@ -1,5 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { StoreContext, Actions } from '../store/store';
+import { Item } from './DirectMessage';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+import { Finder } from './Finder';
 
 const ChannelsTitles = styled.div`
   margin: 2rem 0 1rem;
@@ -11,10 +16,6 @@ const ChannelsTitles = styled.div`
   h2 {
     font-size: 1rem;
   }
-`;
-
-const ChannelItem = styled.li`
-  margin: 0.25rem 0;
 `;
 
 const Button = styled.button`
@@ -41,22 +42,29 @@ interface ChanelProps {
 }
 
 export function Channels({ channels }: ChanelProps) {
-  // const channels = [
-  //   'announcements',
-  //   'general',
-  //   'frontend',
-  //   'backend',
-  //   'random'
-  // ];]
+  const { dispatch } = React.useContext(StoreContext);
+  const [isModalOpen, setModal] = React.useState(false);
+
+  const selectChannel = (channel: { id: string; name: string }) => {
+    dispatch({ type: Actions.SELECTED_CHANNEL, payload: channel });
+  };
   return (
     <>
+      {isModalOpen ? <Finder exitCallback={() => setModal(false)} /> : null}
       <ChannelsTitles>
         <h2>Channels</h2>
-        <i className="fas fa-plus" />
+        <i className="fas fa-plus" onClick={() => setModal(true)} />
       </ChannelsTitles>
       <ul>
         {channels.map(channel => (
-          <ChannelItem key={channel.id}># {channel.name}</ChannelItem>
+          <Item
+            onClick={() =>
+              selectChannel({ id: channel.id, name: channel.name })
+            }
+            key={channel.id}
+          >
+            # {channel.name}
+          </Item>
         ))}
       </ul>
 

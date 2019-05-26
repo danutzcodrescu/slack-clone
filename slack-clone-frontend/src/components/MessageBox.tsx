@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Query } from 'react-apollo';
+import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
+import { MessageQuery } from 'generated/MessageQuery';
+import { StoreContext } from '../store/store';
 
 const messageQuery = gql`
-  query MessageQuery {
-    Mesage(
-      where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
-    ) {
+  query MessageQuery($channelId: uuid) {
+    Mesage(where: { channelId: { _eq: $channelId } }) {
       id
       body
       date
@@ -19,10 +19,8 @@ const messageQuery = gql`
 `;
 
 const messageSubscription = gql`
-  subscription MessageSubscription {
-    Mesage(
-      where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
-    ) {
+  subscription MessageSubscription($channelId: uuid) {
+    Mesage(where: { channelId: { _eq: $channelId } }) {
       id
       date
       body
@@ -66,6 +64,7 @@ interface Message {
 
 export function MessageBox() {
   const messageListRef = React.createRef<HTMLDivElement>();
+  const { selectedChannel } = React.useContext(StoreContext);
 
   React.useEffect(() => {
     messageListRef.current!.scrollTo(
@@ -76,23 +75,31 @@ export function MessageBox() {
 
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
+      variables: { channelId: selectedChannel.id },
       document: messageSubscription,
       updateQuery: (prev: Message[], { subscriptionData }: any) => {
         if (!subscriptionData.data) return prev;
-        return subscriptionData.data;
+        return Object.assign({}, prev, subscriptionData.data);
       }
     });
   };
 
   return (
-    <Query query={messageQuery}>
-      {({ loading, error, data, subscribeToMore }: any) => {
+    <Query query={messageQuery} variables={{ channelId: selectedChannel.id }}>
+      {({
+        loading,
+        error,
+        data,
+        subscribeToMore
+      }: QueryResult<MessageQuery>) => {
         subscription(subscribeToMore);
         return (
           <Container ref={messageListRef}>
             <ul>
-              {!loading && data.Mesage
-                ? (data.Mesage as Message[]).map((message, index) => {
+              {error ? error : null}
+              {/* {data && !data.Mesage ? <p>Select a channel</p> : null} */}
+              {!loading && data!.Mesage
+                ? (data!.Mesage as Message[]).map((message, index) => {
                     return (
                       <li key={message.id}>
                         <Username>{message.User.username}</Username>

@@ -8,6 +8,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { split } from 'apollo-link';
+import { StoreContextProvider } from 'store/store';
 
 const wsLink = new WebSocketLink({
   uri: `wss://slack-clone-hasura.herokuapp.com/v1/graphql`,
@@ -36,11 +37,13 @@ const client = new ApolloClient({
 
 const App: React.FC = () => {
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <Layout />
-      </div>
-    </ApolloProvider>
+    <StoreContextProvider>
+      <ApolloProvider client={client}>
+        <div className="App">
+          <Layout />
+        </div>
+      </ApolloProvider>
+    </StoreContextProvider>
   );
 };
 
