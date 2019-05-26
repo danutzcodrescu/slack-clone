@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const messageQuery = gql`
-  {
+  query MessageQuery {
     Mesage(
       where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
     ) {
@@ -19,7 +19,7 @@ const messageQuery = gql`
 `;
 
 const messageSubscription = gql`
-  subscription {
+  subscription MessageSubscription {
     Mesage(
       where: { channelId: { _eq: "b6def4f9-d92c-4e75-840e-9412876c04a4" } }
     ) {

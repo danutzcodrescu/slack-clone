@@ -4,18 +4,15 @@
   "private": true,
   "dependencies": {
     "apollo-cache-inmemory": "^1.6.0",
-    "apollo-client": "^2.5.1",
-    "apollo-link": "^1.2.11",
-    "apollo-link-error": "^1.1.10",
+    "apollo-client": "^2.6.0",
     "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
-    "apollo-utilities": "^1.2.1",
-    "graphql": "^14.3.0",
+    "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.5",
+    "react-apollo": "^2.5.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0",
+    "react-scripts": "3.0.1",
     "styled-components": "^4.2.0",
     "subscriptions-transport-ws": "^0.9.16",
     "typescript": "3.4.5"
@@ -27,7 +24,8 @@
     "posttest": "npm run format",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.{js,css,md,ts,tsx}\"",
-    "prebuild": "tsc"
+    "prebuild": "tsc",
+    "create-types": "npx apollo codegen:generate --outputFlat src/generated --target typescript --endpoint https://slack-clone-hasura.herokuapp.com/v1/graphql --tagName gql"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,7 +48,6 @@
     "@types/react": "16.8.16",
     "@types/react-dom": "16.8.4",
     "@types/styled-components": "^4.1.14",
-    "apollo": "^2.12.3",
     "husky": ">=1",
     "lint-staged": ">=8",
     "prettier": "^1.17.0",
