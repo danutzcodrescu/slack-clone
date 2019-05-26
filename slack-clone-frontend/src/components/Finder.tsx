@@ -1,13 +1,9 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { ApolloCache } from 'apollo-cache';
-import {
-  CreateChannel_insert_Chanel_returning,
-  CreateChannel
-} from 'generated/CreateChannel';
+import * as React from 'react';
+import { Mutation, MutationFn } from 'react-apollo';
 import { StoreContext } from 'store/store';
+import styled from 'styled-components';
+import { CreateChannel } from '../generated/CreateChannel';
 
 interface Props {
   exitCallback: () => void;
@@ -87,19 +83,19 @@ export function Finder(props: Props) {
   return (
     <Container>
       <Mutation mutation={CreateMembership} update={() => props.exitCallback()}>
-        {(createMembership: any, { data }: any) => (
+        {(createMembership: MutationFn) => (
           <Mutation
             mutation={CreateChannelMutation}
-            update={(cache: any, data: any) => {
+            onCompleted={(data: CreateChannel) => {
               createMembership({
                 variables: {
-                  channelId: data.data.insert_Chanel.returning[0].id,
+                  channelId: data.insert_Chanel!.returning[0].id,
                   userId: user
                 }
               });
             }}
           >
-            {(createChannel: any, { data }: any) => (
+            {(createChannel: MutationFn) => (
               <>
                 <ExitButtonContainer>
                   <ButtonClose onClick={props.exitCallback}>

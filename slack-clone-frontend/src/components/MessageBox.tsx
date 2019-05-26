@@ -1,8 +1,8 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Query, QueryResult } from 'react-apollo';
 import gql from 'graphql-tag';
-import { MessageQuery } from 'generated/MessageQuery';
+import * as React from 'react';
+import { Query, QueryResult } from 'react-apollo';
+import styled from 'styled-components';
+import { MessageQuery, MessageQuery_Mesage } from '../generated/MessageQuery';
 import { StoreContext } from '../store/store';
 
 const messageQuery = gql`
@@ -53,15 +53,6 @@ const DateSpan = styled.span`
   color: darkgrey;
 `;
 
-interface Message {
-  id: string;
-  body: string;
-  date: string;
-  User: {
-    username: string;
-  };
-}
-
 export function MessageBox() {
   const messageListRef = React.createRef<HTMLDivElement>();
   const { selectedChannel } = React.useContext(StoreContext);
@@ -77,7 +68,7 @@ export function MessageBox() {
     subscribeToMore({
       variables: { channelId: selectedChannel.id },
       document: messageSubscription,
-      updateQuery: (prev: Message[], { subscriptionData }: any) => {
+      updateQuery: (prev: MessageQuery_Mesage[], { subscriptionData }: any) => {
         if (!subscriptionData.data) return prev;
         return Object.assign({}, prev, subscriptionData.data);
       }
@@ -99,13 +90,14 @@ export function MessageBox() {
               {error ? error : null}
               {/* {data && !data.Mesage ? <p>Select a channel</p> : null} */}
               {!loading && data!.Mesage
-                ? (data!.Mesage as Message[]).map((message, index) => {
+                ? data!.Mesage.map((message, index) => {
                     return (
                       <li key={message.id}>
                         <Username>{message.User.username}</Username>
                         <DateSpan>
-                          {/* {new Intl.DateTimeFormat('en-GB').format(new Date(message.date))} */}
-                          {message.date}
+                          {new Intl.DateTimeFormat('en-GB').format(
+                            new Date(message.date)
+                          )}
                         </DateSpan>
                         <p>{message.body}</p>
                       </li>

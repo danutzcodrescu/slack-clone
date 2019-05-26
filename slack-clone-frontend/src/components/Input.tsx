@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import * as React from 'react';
+import { Mutation, MutationFn } from 'react-apollo';
+import styled from 'styled-components';
 import { StoreContext } from '../store/store';
 
 const InputStyle = styled.input`
@@ -54,7 +54,7 @@ export function InputMessage() {
   const { selectedChannel, user } = React.useContext(StoreContext);
   return (
     <Mutation mutation={submitMessageMutation}>
-      {(submitMessage: any, { data }: any) => (
+      {(submitMessage: MutationFn) => (
         <form
           onSubmit={e => {
             e.preventDefault();
