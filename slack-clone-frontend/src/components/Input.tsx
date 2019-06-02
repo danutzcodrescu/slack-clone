@@ -1,8 +1,22 @@
-import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation, MutationFn } from 'react-apollo';
 import styled from 'styled-components';
+import { submitMessageMutation } from '../data/mutations';
 import { StoreContext } from '../store/store';
+
+const SubmitButton = styled.button`
+  outline: none;
+  background-color: transparent;
+  border: none;
+  border-left: 3px solid darkgrey;
+  position: fixed;
+  box-sizing: border-box;
+  padding: 1rem;
+  font-size: 1rem;
+  right: 27px;
+  bottom: 13px;
+  cursor: pointer;
+`;
 
 const InputStyle = styled.input`
   padding: 1rem;
@@ -14,40 +28,14 @@ const InputStyle = styled.input`
   &:active,
   &:focus {
     border: 3px solid DimGray;
+    & + ${SubmitButton} {
+      border-left: 3px solid DimGray;
+    }
   }
   box-sizing: border-box;
   position: fixed;
   bottom: 10px;
   width: calc(100vw - 220px);
-`;
-
-const SubmitButton = styled.button`
-  border-radius: 7px;
-  outline: none;
-  background-color: white;
-  border: none;
-  border-left: 3px solid darkgrey;
-  position: fixed;
-  box-sizing: border-box;
-  padding: 1.125rem;
-  right: 27px;
-  bottom: 15px;
-  cursor: pointer;
-`;
-
-const submitMessageMutation = gql`
-  mutation SubmitMessage($userId: String!, $body: String, $channelId: uuid!) {
-    insert_Mesage(
-      objects: { userId: $userId, body: $body, channelId: $channelId }
-    ) {
-      returning {
-        userId
-        id
-        body
-        channelId
-      }
-    }
-  }
 `;
 
 export function InputMessage() {
@@ -61,7 +49,7 @@ export function InputMessage() {
             submitMessage({
               variables: {
                 userId: user,
-                channelId: selectedChannel.id,
+                channelId: selectedChannel!.id,
                 body: (e.target as any).message.value
               }
             });

@@ -49,7 +49,7 @@ export function MainContentHeader() {
     <Container>
       <Title>
         <div>
-          <h3>#{selectedChannel.name}</h3>
+          <h3>#{selectedChannel ? selectedChannel.name : ''}</h3>
         </div>
         <div>
           <i className="far fa-user" />

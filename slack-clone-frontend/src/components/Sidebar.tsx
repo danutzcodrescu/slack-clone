@@ -1,22 +1,10 @@
 import * as React from 'react';
+import { Query, QueryResult } from 'react-apollo';
 import styled from 'styled-components';
-import { Channels, Channel } from './Channels';
+import { membershipQuery } from '../data/queries';
+import { SidebarQuery } from '../generated/SidebarQuery';
+import { Channel, Channels } from './Channels';
 import { DirectMessages } from './DirectMessage';
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-
-const membershipQuery = gql`
-  query SidebarQuery {
-    Membership(where: { userId: { _eq: "user1" } }) {
-      id
-      direct
-      Chanel {
-        id
-        name
-      }
-    }
-  }
-`;
 
 const SidebarContainer = styled.div`
   height: 100%;
@@ -62,7 +50,7 @@ interface Membership {
 export function Sidebar() {
   return (
     <Query query={membershipQuery}>
-      {({ loading, error, data }: any) => (
+      {({ loading, error, data }: QueryResult<SidebarQuery>) => (
         <SidebarContainer>
           <Header>
             <H1>Slack clone</H1>
@@ -75,7 +63,7 @@ export function Sidebar() {
               John Doe
             </UsernameContainer>
           </Header>
-          {!loading && data.Membership ? (
+          {!loading && data && data.Membership ? (
             <>
               <Channels
                 channels={(data.Membership as Membership[])

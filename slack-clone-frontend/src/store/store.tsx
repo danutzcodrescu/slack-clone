@@ -7,7 +7,7 @@ export enum Actions {
 
 const initialChannel = localStorage.getItem('selected_channel')
   ? JSON.parse(localStorage.getItem('selected_channel')!)
-  : { id: 'b6def4f9-d92c-4e75-840e-9412876c04a4', name: 'general' };
+  : null;
 
 const initialStoreValue = {
   selectedChannel: initialChannel,
@@ -28,7 +28,7 @@ type UserAction = { type: Actions.USER; payload: string };
 type Action = SelectedChannelAction | UserAction;
 
 interface State {
-  selectedChannel: { id: string; name: string };
+  selectedChannel: { id: string; name: string } | null;
   user: string;
 }
 

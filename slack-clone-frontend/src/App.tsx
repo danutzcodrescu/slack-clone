@@ -1,24 +1,31 @@
-import React from 'react';
-import { Layout } from './components/Layout';
-
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
-import { ApolloProvider } from 'react-apollo';
+import { split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { split } from 'apollo-link';
+import React from 'react';
+import { ApolloProvider } from 'react-apollo';
 import { StoreContextProvider } from 'store/store';
+import { Layout } from './components/Layout';
 
 const wsLink = new WebSocketLink({
-  uri: `wss://slack-clone-hasura.herokuapp.com/v1/graphql`,
+  uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
   options: {
-    reconnect: true
+    reconnect: true,
+    connectionParams: {
+      headers: {
+        'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
+      }
+    }
   }
 });
 
 const httpLink = new HttpLink({
-  uri: 'https://slack-clone-hasura.herokuapp.com/v1/graphql'
+  uri: `https://${process.env.REACT_APP_HASURA_ENDPOINT}`,
+  headers: {
+    'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
+  }
 });
 
 const link = split(

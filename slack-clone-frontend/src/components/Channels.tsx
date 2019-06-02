@@ -1,9 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { StoreContext, Actions } from '../store/store';
-import { Item } from './DirectMessage';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Actions, StoreContext } from '../store/store';
+import { Item } from '../styles/SidebarItem.styles';
 import { Finder } from './Finder';
 
 const ChannelsTitles = styled.div`
