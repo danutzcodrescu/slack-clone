@@ -12,3 +12,16 @@ export const messageSubscription = gql`
     }
   }
 `;
+
+export const membershipSubscription = gql`
+  subscription SidebarSubscription {
+    Membership(where: { userId: { _eq: "user1" } }) {
+      id
+      direct
+      Chanel {
+        id
+        name
+      }
+    }
+  }
+`;
