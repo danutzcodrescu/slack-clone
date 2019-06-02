@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { StoreContext } from '../store/store';
+import { Input } from 'styles/Input.styles';
 
 const Container = styled.div`
   position: fixed;
@@ -13,7 +14,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid lightgrey;
+  border-bottom: 1px solid ${props => props.theme.borderColorLight};
 `;
 
 const Title = styled.div`
@@ -25,21 +26,6 @@ const Title = styled.div`
   i {
     margin-right: 0.5rem;
     color: darkgrey;
-  }
-`;
-
-const Input = styled.input`
-  border: 1px solid darkgrey;
-  padding: 0.5rem;
-  border-radius: 5px;
-  outline: none;
-  &::placeholder {
-    font-size: 1rem;
-  }
-  &:hover,
-  &:active,
-  &:focus {
-    border: 1px solid DimGray;
   }
 `;
 

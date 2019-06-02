@@ -8,7 +8,7 @@ const SubmitButton = styled.button`
   outline: none;
   background-color: transparent;
   border: none;
-  border-left: 3px solid darkgrey;
+  border-left: ${props => `3px solid ${props.theme.borderColorDark}`};
   position: fixed;
   box-sizing: border-box;
   padding: 1rem;
@@ -21,15 +21,15 @@ const SubmitButton = styled.button`
 const InputStyle = styled.input`
   padding: 1rem;
   border-radius: 7px;
-  border: 3px solid darkgrey;
+  border: 3px solid ${props => props.theme.borderColorDark};
   font-size: 1rem;
   outline: none;
   &:hover,
   &:active,
   &:focus {
-    border: 3px solid DimGray;
+    border: 3px solid ${props => props.theme.hoverBorderColor};
     & + ${SubmitButton} {
-      border-left: 3px solid DimGray;
+      border-left: 3px solid ${props => props.theme.hoverBorderColor};
     }
   }
   box-sizing: border-box;
@@ -40,6 +40,10 @@ const InputStyle = styled.input`
 
 export function InputMessage() {
   const { selectedChannel, user } = React.useContext(StoreContext);
+  const [inputValue, setInputValue] = React.useState('');
+
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setInputValue(e.target.value);
   return (
     <Mutation mutation={submitMessageMutation}>
       {(submitMessage: MutationFn) => (
@@ -60,8 +64,9 @@ export function InputMessage() {
             name="message"
             type="text"
             placeholder="Message John Doe"
+            onChange={onChangeInput}
           />
-          <SubmitButton type="submit">
+          <SubmitButton disabled={inputValue === ''} type="submit">
             <i className="fas fa-arrow-alt-circle-right" />
           </SubmitButton>
         </form>

@@ -8,6 +8,8 @@ import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { StoreContextProvider } from 'store/store';
 import { Layout } from './components/Layout';
+import { ThemeProvider } from 'styled-components';
+import { theme } from 'theme/theme';
 
 const wsLink = new WebSocketLink({
   uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
@@ -46,9 +48,11 @@ const App: React.FC = () => {
   return (
     <StoreContextProvider>
       <ApolloProvider client={client}>
-        <div className="App">
-          <Layout />
-        </div>
+        <ThemeProvider theme={theme}>
+          <div className="App">
+            <Layout />
+          </div>
+        </ThemeProvider>
       </ApolloProvider>
     </StoreContextProvider>
   );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Actions, StoreContext } from '../store/store';
 import { Item } from '../styles/SidebarItem.styles';
-import { Finder } from './Finder';
+import { Finder } from './Sidebar/Channels/CreateChannel.component';
 
 const ChannelsTitles = styled.div`
   margin: 2rem 0 1rem;
@@ -19,7 +19,7 @@ const ChannelsTitles = styled.div`
 const Button = styled.button`
   background-color: transparent;
   padding: 5px;
-  color: white;
+  color: ${props => props.theme.textColorLight};
   border: none;
   font-size: 1rem;
   &.channel-button {
