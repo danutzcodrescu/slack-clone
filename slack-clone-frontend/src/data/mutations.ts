@@ -34,3 +34,41 @@ export const submitMessageMutation = gql`
     }
   }
 `;
+
+export const joinChannel = gql`
+  mutation JoinChannel($userId: String!, $channelId: uuid!) {
+    insert_Membership(
+      objects: { channelId: $channelId, userId: $userId, direct: false }
+    ) {
+      returning {
+        id
+        Chanel {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const createDMChannel = gql`
+  mutation CreateDMChannel($user1: String!, $user2: String!, $title: String) {
+    insert_Chanel(
+      objects: {
+        name: $title
+        group: ""
+        Memberships: {
+          data: [
+            { userId: $user1, direct: true }
+            { userId: $user2, direct: true }
+          ]
+        }
+      }
+    ) {
+      returning {
+        id
+        name
+      }
+    }
+  }
+`;
