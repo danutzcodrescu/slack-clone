@@ -24,3 +24,20 @@ export const membershipQuery = gql`
     }
   }
 `;
+
+export const allChannelsQuery = gql`
+  query ChannelsQuery($channelName: String) {
+    Chanel(
+      where: {
+        name: { _ilike: $channelName }
+        Memberships: { direct: { _eq: false } }
+      }
+    ) {
+      id
+      name
+      Memberships {
+        userId
+      }
+    }
+  }
+`;
