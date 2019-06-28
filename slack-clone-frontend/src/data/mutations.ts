@@ -50,3 +50,25 @@ export const joinChannel = gql`
     }
   }
 `;
+
+export const createDMChannel = gql`
+  mutation CreateDMChannel($user1: String!, $user2: String!, $title: String) {
+    insert_Chanel(
+      objects: {
+        name: $title
+        group: ""
+        Memberships: {
+          data: [
+            { userId: $user1, direct: true }
+            { userId: $user2, direct: true }
+          ]
+        }
+      }
+    ) {
+      returning {
+        id
+        name
+      }
+    }
+  }
+`;

@@ -41,3 +41,32 @@ export const allChannelsQuery = gql`
     }
   }
 `;
+
+export const allUsersQuery = gql`
+  query UsersQuery($currentUserId: String, $filter: String) {
+    User(
+      where: { id: { _neq: $currentUserId }, username: { _ilike: $filter } }
+    ) {
+      id
+      username
+    }
+  }
+`;
+
+export const checkMembership = gql`
+  query ExistingMembership($user1: String, $user2: String) {
+    Membership(
+      where: {
+        userId: { _eq: $user1 }
+        direct: { _eq: true }
+        Chanel: { Memberships: { userId: { _eq: $user2 } } }
+      }
+    ) {
+      id
+      Chanel {
+        name
+        id
+      }
+    }
+  }
+`;

@@ -8,26 +8,11 @@ import { Input } from 'styles/Input.styles';
 import { debounce } from 'lodash';
 import { StoreContext, Actions } from 'store/store';
 import { joinChannel } from 'data/mutations';
+import { DataContainer, DataItem } from 'styles/DataModal.styles';
 
 interface Props {
   exitCallback: () => void;
 }
-
-const ChannelItem = styled.div`
-  padding: 1rem 2rem;
-  border-top: 1px solid ${props => props.theme.borderColorLight};
-  box-sizing: border-box;
-  cursor: pointer;
-`;
-
-const ChannelContainer = styled.div`
-  margin-top: 2rem;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  ${ChannelItem}:last-child {
-    border-bottom: 1px solid ${props => props.theme.borderColorLight};
-  }
-`;
 
 const SearchInput = styled(Input)`
   width: 100%;
@@ -91,14 +76,14 @@ export function JoinChannel(props: Props) {
 
                   return (
                     <>
-                      <ChannelContainer>
+                      <DataContainer>
                         {data.Chanel.map(
                           (channel: {
                             id: string;
                             name: string;
                             Memberships: any;
                           }) => (
-                            <ChannelItem
+                            <DataItem
                               key={channel.id}
                               onClick={() =>
                                 selectChannel(
@@ -108,10 +93,10 @@ export function JoinChannel(props: Props) {
                               }
                             >
                               # {channel.name}
-                            </ChannelItem>
+                            </DataItem>
                           )
                         )}
-                      </ChannelContainer>
+                      </DataContainer>
                     </>
                   );
                 }}
