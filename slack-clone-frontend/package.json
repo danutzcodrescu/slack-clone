@@ -15,9 +15,7 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "styled-components": "^4.2.0",
-    "subscriptions-transport-ws": "^0.9.16",
-    "typescript": "3.4.5",
-    "why-did-you-update": "^1.0.6"
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,7 +25,7 @@
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.{js,css,md,ts,tsx}\"",
     "prebuild": "tsc",
-    "create-types": "npx apollo codegen:generate --outputFlat src/generated --target typescript --endpoint https://slack-clone-hasura.herokuapp.com/v1/graphql --tagName gql"
+    "create-types": "npx apollo codegen:generate --outputFlat src/generated --target typescript --endpoint https://slack-clone-hasura.herokuapp.com/v1/graphql --tagName gql --header 'x-hasura-access-key:'$HASURA_KEY"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,9 +43,9 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "24.0.12",
+    "@types/jest": "^24.0.12",
     "@types/lodash": "^4.14.134",
-    "@types/node": "12.0.0",
+    "@types/node": "^12.0.0",
     "@types/react": "16.8.16",
     "@types/react-dom": "16.8.4",
     "@types/styled-components": "^4.1.14",
