@@ -69,23 +69,20 @@ export function JoinDM(props: Props) {
   function setMembership(users: User[]) {
     props
       .client!.query({
-        query: checkMembership,
-        variables: { user1: user, user2: users[0].id }
+        query: checkMembership([user, ...users.map(user => user.id)])
       })
       .then((resp: any) => {
-        if (resp.data.Membership.length) {
+        if (resp.data.Chanel.length) {
           dispatch({
             type: Actions.SELECTED_CHANNEL,
-            payload: resp.data.Membership[0].Chanel
+            payload: resp.data.Chanel[0]
           });
         } else {
           props
             .client!.mutate({
-              mutation: createDMChannel,
+              mutation: createDMChannel([user, ...users.map(user => user.id)]),
               variables: {
-                user1: user,
-                user2: users[0].id,
-                title: `${user}-${users[0].id}`
+                title: `${user}-${users.map(user => user.id).join('-')}`
               }
             })
             .then(resp => {

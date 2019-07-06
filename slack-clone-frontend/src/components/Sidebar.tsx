@@ -6,6 +6,7 @@ import { SidebarQuery } from '../generated/SidebarQuery';
 import { Channel, Channels } from './Channels';
 import { DirectMessages } from './DirectMessage';
 import { membershipSubscription } from 'data/subscriptions';
+import { StoreContext } from 'store/store';
 
 const SidebarContainer = styled.div`
   height: 100%;
@@ -42,13 +43,8 @@ export const Status = styled.span`
   display: inline-block;
 `;
 
-interface Membership {
-  direct: boolean;
-  id: string;
-  Chanel: Channel;
-}
-
 export function Sidebar() {
+  const { user } = React.useContext(StoreContext);
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
       // variables: { channelId: selectedChannel!.id },
@@ -60,38 +56,34 @@ export function Sidebar() {
     });
   };
   return (
-    <Query query={membershipQuery}>
-      {({
-        loading,
-        error,
-        data,
-        subscribeToMore
-      }: QueryResult<SidebarQuery>) => {
+    <Query query={membershipQuery} variables={{ user }}>
+      {({ loading, error, data, subscribeToMore }: QueryResult) => {
         subscription(subscribeToMore);
         return (
           <SidebarContainer>
             <Header>
               <H1>Slack clone</H1>
               <div>
-                <i className="far fa-bell" /> 
+                <i className="far fa-bell" />
+                 
               </div>
               <UsernameContainer>
                 <Status />
                 John Doe
               </UsernameContainer>
             </Header>
-            {!loading && data && data.Membership ? (
+            {!loading && data && data.Chanel ? (
               <>
                 <Channels
-                  channels={(data.Membership as Membership[])
-                    .filter(membership => !membership.direct)
-                    .map(membership => membership.Chanel)}
+                  channels={(data.Chanel as Channel[]).filter(
+                    chanel => !chanel.Memberships[0].direct
+                  )}
                 />
                 <DirectMessages
-                  channels={(data.Membership as Membership[]).reduce(
+                  channels={(data.Chanel as Channel[]).reduce(
                     (acc, value) => {
-                      if (value.direct) {
-                        return [...acc, value.Chanel];
+                      if (value.Memberships[0].direct) {
+                        return [...acc, value];
                       }
 
                       return acc;

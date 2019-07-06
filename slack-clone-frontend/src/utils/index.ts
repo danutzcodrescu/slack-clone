@@ -33,3 +33,11 @@ export function useWhyDidYouUpdate(name: string, props: any) {
     previousProps.current = props;
   });
 }
+
+export function createMembershipTemplateQuery(ids: string[]) {
+  return ids.map(id => `{Memberships: {userId: {_eq: "${id}"}}}`);
+}
+
+export function createMembershipTemplateMutation(ids: string[]) {
+  return ids.map(id => `{ userId: "${id}", direct: true }`);
+}

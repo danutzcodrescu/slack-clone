@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 import { StoreContext, Actions } from 'store/store';
 import { joinChannel } from 'data/mutations';
 import { DataContainer, DataItem } from 'styles/DataModal.styles';
+import { Channel } from 'components/Channels';
 
 interface Props {
   exitCallback: () => void;
@@ -33,7 +34,7 @@ export function JoinChannel(props: Props) {
   };
 
   function selectChannel(
-    channel: { id: string; name: string },
+    channel: { id: string; name: string; members: number },
     memberships: { userId: string }[]
   ) {
     if (memberships.some(membership => membership.userId === user)) {
@@ -77,25 +78,25 @@ export function JoinChannel(props: Props) {
                   return (
                     <>
                       <DataContainer>
-                        {data.Chanel.map(
-                          (channel: {
-                            id: string;
-                            name: string;
-                            Memberships: any;
-                          }) => (
-                            <DataItem
-                              key={channel.id}
-                              onClick={() =>
-                                selectChannel(
-                                  { id: channel.id, name: channel.name },
-                                  channel.Memberships
-                                )
-                              }
-                            >
-                              # {channel.name}
-                            </DataItem>
-                          )
-                        )}
+                        {data.Chanel.map((channel: Channel) => (
+                          <DataItem
+                            key={channel.id}
+                            onClick={() =>
+                              selectChannel(
+                                {
+                                  id: channel.id,
+                                  name: channel.name,
+                                  members:
+                                    channel.Memberships_aggregate.aggregate
+                                      .count
+                                },
+                                channel.Memberships
+                              )
+                            }
+                          >
+                            # {channel.name}
+                          </DataItem>
+                        ))}
                       </DataContainer>
                     </>
                   );

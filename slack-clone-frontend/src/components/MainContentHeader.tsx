@@ -39,7 +39,8 @@ export function MainContentHeader() {
         </div>
         <div>
           <i className="far fa-user" />
-          42 members
+          {selectedChannel ? selectedChannel.members : 0} member
+          {selectedChannel && selectedChannel.members > 1 && 's'}
         </div>
       </Title>
       <div>

@@ -21,14 +21,14 @@ export const StoreContext = React.createContext<Context>({
 
 type SelectedChannelAction = {
   type: Actions.SELECTED_CHANNEL;
-  payload: { id: string; name: string };
+  payload: { id: string; name: string; members: number };
 };
 type UserAction = { type: Actions.USER; payload: string };
 
 type Action = SelectedChannelAction | UserAction;
 
 interface State {
-  selectedChannel: { id: string; name: string } | null;
+  selectedChannel: { id: string; name: string; members: number } | null;
   user: string;
 }
 

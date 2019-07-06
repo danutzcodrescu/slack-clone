@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Actions, StoreContext } from '../store/store';
 import { Item } from '../styles/SidebarItem.styles';
-import { Channel } from './Channels';
+import { Channel, Membership } from './Channels';
 import { Status } from './Sidebar';
 import { JoinDmComponent } from './Sidebar/DMs/JoinDm.component';
 
@@ -18,17 +18,40 @@ const MessagesTitles = styled.div`
   }
 `;
 
+const MembersCount = styled.span`
+  padding: 3px;
+  background-color: ${props => props.theme.backgroundColorGrey};
+  color: ${props => props.theme.textColorDark};
+  margin-right: calc(0.4rem - 1px);
+  border-radius: 80%;
+`;
+
 interface DirectMessageProps {
   channels: Channel[];
 }
 
 export function DirectMessages({ channels }: DirectMessageProps) {
-  const { dispatch } = React.useContext(StoreContext);
+  const { user, dispatch } = React.useContext(StoreContext);
   const [isJoinDM, setDMModal] = React.useState<boolean>(false);
 
-  const selectChannel = (channel: { id: string; name: string }) => {
+  const selectChannel = (channel: {
+    id: string;
+    name: string;
+    members: number;
+  }) => {
     dispatch({ type: Actions.SELECTED_CHANNEL, payload: channel });
   };
+  function DMTitles(channel: Channel) {
+    return channel.Memberships.reduce(
+      (acc, value: Membership) => {
+        if (value.userId !== user) {
+          return [...acc, value.userId];
+        }
+        return acc;
+      },
+      [] as string[]
+    ).join(' - ');
+  }
   return (
     <>
       {isJoinDM ? (
@@ -42,11 +65,20 @@ export function DirectMessages({ channels }: DirectMessageProps) {
         {channels.map(channel => (
           <Item
             onClick={() =>
-              selectChannel({ id: channel.id, name: channel.name })
+              selectChannel({
+                id: channel.id,
+                name: channel.name,
+                members: channel.Memberships_aggregate.aggregate.count
+              })
             }
             key={channel.id}
           >
-            <Status /> {channel.name}
+            {channel.Memberships.length === 2 ? (
+              <Status />
+            ) : (
+              <MembersCount>{channel.Memberships.length - 1}</MembersCount>
+            )}{' '}
+            {DMTitles(channel)}
           </Item>
         ))}
       </ul>
