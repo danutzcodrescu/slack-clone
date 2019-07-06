@@ -7,9 +7,9 @@ import { getMainDefinition } from 'apollo-utilities';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { StoreContextProvider } from 'store/store';
-import { Layout } from './components/Layout';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'theme/theme';
+import { Layout } from './components/Layout';
 
 const wsLink = new WebSocketLink({
   uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
@@ -41,7 +41,20 @@ const link = split(
 
 const client = new ApolloClient({
   link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all'
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all'
+    },
+    mutate: {
+      errorPolicy: 'all'
+    }
+  }
 });
 
 const App: React.FC = () => {

@@ -4,7 +4,7 @@ import { Actions, StoreContext } from '../store/store';
 import { Item } from '../styles/SidebarItem.styles';
 import { Channel } from './Channels';
 import { Status } from './Sidebar';
-import { JoinDM, JoinDmComponent } from './Sidebar/DMs/JoinDm.component';
+import { JoinDmComponent } from './Sidebar/DMs/JoinDm.component';
 
 const MessagesTitles = styled.div`
   margin: 2rem 0 1rem;
