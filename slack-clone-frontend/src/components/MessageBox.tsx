@@ -39,17 +39,17 @@ const DateSpan = styled.span`
 `;
 
 export function MessageBox() {
+  const [data, setData] = React.useState<MessageQuery_Mesage[] | undefined>(
+    undefined
+  );
   const messageListRef = React.createRef<HTMLDivElement>();
   const { selectedChannel } = React.useContext(StoreContext);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (selectedChannel) {
-      messageListRef.current!.scrollTo(
-        messageListRef.current!.scrollTop,
-        messageListRef.current!.scrollHeight
-      );
+      messageListRef.current!.scrollTo(0, messageListRef.current!.scrollHeight);
     }
-  }, [messageListRef, selectedChannel]);
+  }, [data, selectedChannel, messageListRef]);
 
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
@@ -75,6 +75,9 @@ export function MessageBox() {
         subscribeToMore
       }: QueryResult<MessageQuery>) => {
         subscription(subscribeToMore);
+        if (data && data.Mesage) {
+          setData(data.Mesage);
+        }
         let df = new Intl.DateTimeFormat(
           navigator.languages ? navigator.languages[0] : 'en-US',
           {
