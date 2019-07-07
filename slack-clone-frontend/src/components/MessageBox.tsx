@@ -1,3 +1,5 @@
+import { isToday, isYesterday } from 'date-fns';
+import { groupBy } from 'lodash';
 import * as React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import styled from 'styled-components';
@@ -5,8 +7,6 @@ import { messageQuery } from '../data/queries';
 import { messageSubscription } from '../data/subscriptions';
 import { MessageQuery, MessageQuery_Mesage } from '../generated/MessageQuery';
 import { StoreContext } from '../store/store';
-import { groupBy } from 'lodash';
-import { isToday, isYesterday } from 'date-fns';
 
 const Container = styled.div`
   margin-top: 85px;
@@ -75,12 +75,23 @@ export function MessageBox() {
         subscribeToMore
       }: QueryResult<MessageQuery>) => {
         subscription(subscribeToMore);
+        let df = new Intl.DateTimeFormat(
+          navigator.languages ? navigator.languages[0] : 'en-US',
+          {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+          }
+        );
         let dates: any;
         if (data && data.Mesage) {
+          const dtf = new Intl.DateTimeFormat(
+            navigator.languages ? navigator.languages[0] : 'en-US'
+          );
           dates = groupBy(data.Mesage, (message: any) =>
-            new Intl.DateTimeFormat(
-              navigator.languages ? navigator.languages[0] : 'en-US'
-            ).format(new Date(message.date))
+            dtf.format(new Date(message.date))
           );
         }
         const rtf = new (Intl as any).RelativeTimeFormat(
@@ -107,9 +118,7 @@ export function MessageBox() {
                           <li key={message.id}>
                             <Username>{message.User.username}</Username>
                             <DateSpan>
-                              {new Intl.DateTimeFormat('en-GB').format(
-                                new Date(message.date)
-                              )}
+                              {df.format(new Date(message.date))}
                             </DateSpan>
                             <p>{message.body}</p>
                           </li>
