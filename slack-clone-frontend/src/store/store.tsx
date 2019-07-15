@@ -49,6 +49,7 @@ function storeReducer(state: State, action: Action): State {
 
 interface Props {
   children: React.ReactNode;
+  user: string | null;
 }
 
 export function StoreContextProvider(props: Props) {

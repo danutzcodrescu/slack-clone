@@ -10,6 +10,9 @@ import { StoreContextProvider } from 'store/store';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'theme/theme';
 import { Layout } from './components/Layout';
+import createAuth0Client from '@auth0/auth0-spa-js';
+import config from './auth_config.json';
+import { createBrowserHistory } from 'history';
 
 const wsLink = new WebSocketLink({
   uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
@@ -58,8 +61,28 @@ const client = new ApolloClient({
 });
 
 const App: React.FC = () => {
+  const [user, setUser] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    createAuth0Client(config).then(async auth0 => {
+      let user;
+      if (window.location.search.includes('code=')) {
+        await auth0.handleRedirectCallback();
+        user = await auth0.getUser();
+        setUser(user);
+        // const history = createBrowserHistory();
+        // history.push('/');
+      }
+      const isAuthenticated = await auth0.isAuthenticated();
+      if (isAuthenticated) {
+        auth0.loginWithRedirect({ redirect_uri: 'http://localhost:3000' });
+      } else {
+        console.log(isAuthenticated);
+      }
+    });
+  }, []);
+
   return (
-    <StoreContextProvider>
+    <StoreContextProvider user={user}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
           <div className="App">
