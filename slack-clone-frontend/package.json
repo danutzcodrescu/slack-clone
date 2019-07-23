@@ -1,6 +1,8 @@
 {
   "name": "slack-clone-frontend",
   "version": "0.1.0",
+  "description": "Slack clone built using React, Typescript, styled-components, Apollo Graphql, Auh0, Hasura and Netlify."
+  "keywords":["react hooks", "typescript", "styled-components", "Apollo Graphql", "Hasura", "Algolia", "Auth0", "Netlify"]
   "private": true,
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.0.2",
