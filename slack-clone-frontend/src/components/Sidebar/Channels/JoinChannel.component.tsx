@@ -37,11 +37,11 @@ export function JoinChannel(props: Props) {
     channel: { id: string; name: string; members: number },
     memberships: { userId: string }[]
   ) {
-    if (memberships.some(membership => membership.userId === user)) {
+    if (memberships.some(membership => membership.userId === user.id)) {
       dispatch({ type: Actions.SELECTED_CHANNEL, payload: channel });
     } else {
       (createMembershipRef as any)
-        .current({ variables: { channelId: channel.id, userId: user } })
+        .current({ variables: { channelId: channel.id, userId: user.id } })
         .then((resp: any) => {
           const channelAffiliation =
             resp.data.insert_Membership.returning[0].Chanel;

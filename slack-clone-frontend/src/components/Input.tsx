@@ -52,7 +52,7 @@ export function InputMessage() {
             e.preventDefault();
             submitMessage({
               variables: {
-                userId: user,
+                userId: user.id,
                 channelId: selectedChannel!.id,
                 body: (e.target as any).message.value
               }
@@ -63,7 +63,8 @@ export function InputMessage() {
           <InputStyle
             name="message"
             type="text"
-            placeholder="Message John Doe"
+            placeholder={`Message to/in ${selectedChannel &&
+              selectedChannel.name}`}
             onChange={onChangeInput}
           />
           <SubmitButton disabled={inputValue === ''} type="submit">

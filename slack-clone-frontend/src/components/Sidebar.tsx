@@ -44,7 +44,7 @@ export const Status = styled.span`
 `;
 
 export function Sidebar() {
-  const { user } = React.useContext(StoreContext);
+  const { user, auth0 } = React.useContext(StoreContext);
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
       // variables: { channelId: selectedChannel!.id },
@@ -56,7 +56,7 @@ export function Sidebar() {
     });
   };
   return (
-    <Query query={membershipQuery} variables={{ user }}>
+    <Query query={membershipQuery} variables={{ user: user.id }}>
       {({ loading, error, data, subscribeToMore }: QueryResult) => {
         subscription(subscribeToMore);
         return (
@@ -64,12 +64,12 @@ export function Sidebar() {
             <Header>
               <H1>Slack clone</H1>
               <div>
-                <i className="far fa-bell" />
-                 
+                <i className="far fa-bell" /> 
               </div>
               <UsernameContainer>
                 <Status />
-                John Doe
+                {user.username}
+                <button onClick={() => auth0!.logout()}>Log out</button>
               </UsernameContainer>
             </Header>
             {!loading && data && data.Chanel ? (

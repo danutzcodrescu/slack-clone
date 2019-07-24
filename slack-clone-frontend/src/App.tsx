@@ -6,13 +6,12 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { StoreContextProvider } from 'store/store';
+import { StoreContextProvider, User } from 'store/store';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'theme/theme';
 import { Layout } from './components/Layout';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import config from './auth_config.json';
-import { createBrowserHistory } from 'history';
 
 const wsLink = new WebSocketLink({
   uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
@@ -20,7 +19,8 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     connectionParams: {
       headers: {
-        'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
+        'x-hasura-access-key':
+          '1QYgLeZS7NWJmaqm!Gat83Lbj4f6Rk7rn&7iY1&%4I$N&E4N'
       }
     }
   }
@@ -29,7 +29,7 @@ const wsLink = new WebSocketLink({
 const httpLink = new HttpLink({
   uri: `https://${process.env.REACT_APP_HASURA_ENDPOINT}`,
   headers: {
-    'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
+    'x-hasura-access-key': '1QYgLeZS7NWJmaqm!Gat83Lbj4f6Rk7rn&7iY1&%4I$N&E4N'
   }
 });
 
@@ -61,22 +61,21 @@ const client = new ApolloClient({
 });
 
 const App: React.FC = () => {
-  const [user, setUser] = React.useState<string | null>(null);
+  const [user, setUser] = React.useState<any>(null);
   React.useEffect(() => {
     createAuth0Client(config).then(async auth0 => {
       let user;
       if (window.location.search.includes('code=')) {
         await auth0.handleRedirectCallback();
         user = await auth0.getUser();
-        setUser(user);
-        // const history = createBrowserHistory();
-        // history.push('/');
+        setUser({ username: user.nickname, id: user.sub, auth0 });
       }
       const isAuthenticated = await auth0.isAuthenticated();
-      if (isAuthenticated) {
+      if (!isAuthenticated) {
         auth0.loginWithRedirect({ redirect_uri: 'http://localhost:3000' });
       } else {
-        console.log(isAuthenticated);
+        user = await auth0.getUser();
+        setUser({ username: user.nickname, id: user.sub, auth0 });
       }
     });
   }, []);

@@ -61,7 +61,7 @@ export function JoinDM(props: Props) {
   const refectchRef = React.useRef<Function>();
   const fetchData = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     (refectchRef as any).current({
-      currentUserId: user,
+      currentUserId: user.id,
       filter: `%${e.target.value}%`
     });
   }, 300);
@@ -69,7 +69,7 @@ export function JoinDM(props: Props) {
   function setMembership(users: User[]) {
     props
       .client!.query({
-        query: checkMembership([user, ...users.map(user => user.id)])
+        query: checkMembership([user.id, ...users.map(user => user.id)])
       })
       .then((resp: any) => {
         if (resp.data.Chanel.length) {
@@ -80,7 +80,10 @@ export function JoinDM(props: Props) {
         } else {
           props
             .client!.mutate({
-              mutation: createDMChannel([user, ...users.map(user => user.id)]),
+              mutation: createDMChannel([
+                user.id,
+                ...users.map(user => user.id)
+              ]),
               variables: {
                 title: `${user}-${users.map(user => user.id).join('-')}`
               }

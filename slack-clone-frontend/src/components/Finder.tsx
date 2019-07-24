@@ -70,7 +70,7 @@ export function Finder(props: Props) {
               createMembership({
                 variables: {
                   channelId: data.insert_Chanel!.returning[0].id,
-                  userId: user
+                  userId: user.id
                 }
               });
             }}
