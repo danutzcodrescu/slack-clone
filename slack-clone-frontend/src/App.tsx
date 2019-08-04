@@ -19,8 +19,7 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     connectionParams: {
       headers: {
-        'x-hasura-access-key':
-          '1QYgLeZS7NWJmaqm!Gat83Lbj4f6Rk7rn&7iY1&%4I$N&E4N'
+        'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
       }
     }
   }
@@ -29,7 +28,7 @@ const wsLink = new WebSocketLink({
 const httpLink = new HttpLink({
   uri: `https://${process.env.REACT_APP_HASURA_ENDPOINT}`,
   headers: {
-    'x-hasura-access-key': '1QYgLeZS7NWJmaqm!Gat83Lbj4f6Rk7rn&7iY1&%4I$N&E4N'
+    'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
   }
 });
 
