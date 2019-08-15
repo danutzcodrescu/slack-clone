@@ -43,13 +43,13 @@ export function MessageBox() {
     undefined
   );
   const messageListRef = React.createRef<HTMLDivElement>();
-  const { selectedChannel } = React.useContext(StoreContext);
+  const { selectedChannel, user } = React.useContext(StoreContext);
 
   React.useLayoutEffect(() => {
-    if (selectedChannel) {
+    if (selectedChannel && user.id) {
       messageListRef.current!.scrollTo(0, messageListRef.current!.scrollHeight);
     }
-  }, [data, selectedChannel, messageListRef]);
+  }, [data, selectedChannel, messageListRef, user]);
 
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
@@ -64,6 +64,9 @@ export function MessageBox() {
 
   if (!selectedChannel) {
     return <div />;
+  }
+  if (!user.id) {
+    return <div></div>;
   }
 
   return (

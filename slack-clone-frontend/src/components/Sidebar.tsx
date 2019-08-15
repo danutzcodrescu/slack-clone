@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Query, QueryResult } from 'react-apollo';
+import { Query, QueryResult, withApollo } from 'react-apollo';
 import styled from 'styled-components';
 import { membershipQuery } from '../data/queries';
 import { SidebarQuery } from '../generated/SidebarQuery';
@@ -7,6 +7,9 @@ import { Channel, Channels } from './Channels';
 import { DirectMessages } from './DirectMessage';
 import { membershipSubscription } from 'data/subscriptions';
 import { StoreContext } from 'store/store';
+import ApolloClient from 'apollo-client';
+import { changeUserStatus } from 'data/mutations';
+import { Status } from './Sidebar/Channels/Status.component';
 
 const SidebarContainer = styled.div`
   height: 100%;
@@ -34,17 +37,22 @@ const UsernameContainer = styled.div`
   margin-top: 0.5rem;
 `;
 
-export const Status = styled.span`
-  height: 0.7rem;
-  width: 0.7rem;
-  border-radius: 100%;
-  background-color: green;
-  margin-right: 0.5rem;
-  display: inline-block;
-`;
+interface Props {
+  client?: ApolloClient<any>;
+}
 
-export function Sidebar() {
+function SidebarComponent(props: Props) {
   const { user, auth0 } = React.useContext(StoreContext);
+  React.useEffect(() => {
+    if (user.id) {
+      props
+        .client!.mutate({
+          mutation: changeUserStatus,
+          variables: { userId: user.id, status: 'online' }
+        })
+        .then(resp => console.log('resp'));
+    }
+  }, [props.client, user]);
   const subscription = (subscribeToMore: any) => {
     subscribeToMore({
       // variables: { channelId: selectedChannel!.id },
@@ -55,6 +63,17 @@ export function Sidebar() {
       }
     });
   };
+  async function logout() {
+    await props.client!.mutate({
+      mutation: changeUserStatus,
+      variables: { userId: user.id, status: 'offline' }
+    });
+    localStorage.removeItem('token');
+    auth0!.logout();
+  }
+  if (!user.id) {
+    return <div></div>;
+  }
   return (
     <Query query={membershipQuery} variables={{ user: user.id }}>
       {({ loading, error, data, subscribeToMore }: QueryResult) => {
@@ -64,12 +83,13 @@ export function Sidebar() {
             <Header>
               <H1>Slack clone</H1>
               <div>
-                <i className="far fa-bell" /> 
+                <i className="far fa-bell" />
+                 
               </div>
               <UsernameContainer>
-                <Status />
+                <Status status="online" />
                 {user.username}
-                <button onClick={() => auth0!.logout()}>Log out</button>
+                <button onClick={logout}>Log out</button>
               </UsernameContainer>
             </Header>
             {!loading && data && data.Chanel ? (
@@ -99,3 +119,5 @@ export function Sidebar() {
     </Query>
   );
 }
+
+export const Sidebar = withApollo(SidebarComponent);

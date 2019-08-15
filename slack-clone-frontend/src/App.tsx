@@ -6,12 +6,28 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-import { StoreContextProvider, User } from 'store/store';
+import { StoreContextProvider } from 'store/store';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'theme/theme';
 import { Layout } from './components/Layout';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import config from './auth_config.json';
+import { createBrowserHistory } from 'history';
+import { setContext } from 'apollo-link-context';
+
+const history = createBrowserHistory();
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : ''
+    }
+  };
+});
 
 const wsLink = new WebSocketLink({
   uri: `wss://${process.env.REACT_APP_HASURA_ENDPOINT}`,
@@ -19,17 +35,14 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     connectionParams: {
       headers: {
-        'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     }
   }
 });
 
 const httpLink = new HttpLink({
-  uri: `https://${process.env.REACT_APP_HASURA_ENDPOINT}`,
-  headers: {
-    'x-hasura-access-key': process.env.REACT_APP_HASURA_ADMIN_SECRET
-  }
+  uri: `https://${process.env.REACT_APP_HASURA_ENDPOINT}`
 });
 
 const link = split(
@@ -42,7 +55,7 @@ const link = split(
 );
 
 const client = new ApolloClient({
-  link,
+  link: authLink.concat(link),
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
@@ -68,12 +81,17 @@ const App: React.FC = () => {
         await auth0.handleRedirectCallback();
         user = await auth0.getUser();
         setUser({ username: user.nickname, id: user.sub, auth0 });
+        history.replace('/');
       }
       const isAuthenticated = await auth0.isAuthenticated();
       if (!isAuthenticated) {
-        auth0.loginWithRedirect({ redirect_uri: 'http://localhost:3000' });
+        auth0.loginWithRedirect({ redirect_uri: window.location.origin });
       } else {
         user = await auth0.getUser();
+        const token = (auth0 as any).cache.cache[
+          'default::openid profile email'
+        ].id_token;
+        localStorage.setItem('token', token);
         setUser({ username: user.nickname, id: user.sub, auth0 });
       }
     });

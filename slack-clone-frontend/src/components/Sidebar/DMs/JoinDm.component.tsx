@@ -85,7 +85,7 @@ export function JoinDM(props: Props) {
                 ...users.map(user => user.id)
               ]),
               variables: {
-                title: `${user}-${users.map(user => user.id).join('-')}`
+                title: `${user.id}-${users.map(user => user.id).join('-')}`
               }
             })
             .then(resp => {
@@ -136,11 +136,11 @@ export function JoinDM(props: Props) {
         ))}
         <Query
           query={allUsersQuery}
-          variables={{ currentUserId: user, filter: '%' }}
+          variables={{ currentUserId: user.id, filter: '%' }}
         >
           {({ loading, error, data, refetch }: QueryResult) => {
             refectchRef.current = refetch;
-            if (loading) {
+            if (loading || !data) {
               return <p>loading</p>;
             }
 

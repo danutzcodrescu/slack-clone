@@ -72,3 +72,11 @@ export const createDMChannel = (userIds: string[]) => gql`
     }
   }
 `;
+
+export const changeUserStatus = gql`
+  mutation ChangeUserStatus($userId: String!, $status: String!) {
+    update_User(where: { id: { _eq: $userId } }, _set: { status: $status }) {
+      affected_rows
+    }
+  }
+`;

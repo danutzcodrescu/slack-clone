@@ -17,6 +17,7 @@
     "@auth0/auth0-spa-js": "^1.0.2",
     "apollo-cache-inmemory": "^1.6.0",
     "apollo-client": "^2.6.0",
+    "apollo-link-context": "^1.0.18",
     "apollo-link-http": "^1.5.14",
     "apollo-link-ws": "^1.0.17",
     "date-fns": "^1.30.1",

@@ -22,6 +22,9 @@ export const membershipQuery = gql`
         userId
         direct
         id
+        User {
+          status
+        }
       }
       Memberships_aggregate {
         aggregate {
