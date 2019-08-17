@@ -1,15 +1,14 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Modal } from '../../Modal/Modal.component';
 import { Input } from 'styles/Input.styles';
 import { CloseButton, SubmitButton, Form } from 'styles/ModalButtons';
-import { Query, QueryResult, withApollo } from 'react-apollo';
 import { allUsersQuery, checkMembership } from 'data/queries';
 import { StoreContext, Actions } from 'store/store';
 import { DataContainer, DataItem } from 'styles/DataModal.styles';
 import { debounce, random } from 'lodash';
-import ApolloClient from 'apollo-client';
 import { createDMChannel } from 'data/mutations';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { UserTag, UserDeleteTag, colors } from './JoinDm.styles';
 
 interface User {
   username: string;
@@ -17,69 +16,42 @@ interface User {
   color: string;
 }
 
-const colors = [
-  'RebeccaPurple',
-  'Teal',
-  'Navy',
-  'MediumPurple',
-  'MediumSeaGreen'
-];
-
-const UserTag = styled.div`
-  box-sizing: border-box;
-  padding: 0.5rem;
-  margin-top: 0.3rem;
-  color: white;
-  border-radius: 0.5rem;
-  position: relative;
-`;
-
-const UserDeleteTag = styled.span.attrs({
-  role: 'button'
-})`
-  color: white;
-  font-size: 1.2rem;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  z-index: 9;
-  cursor: pointer;
-`;
-
 interface Props {
   exitCallback: () => void;
-  client?: ApolloClient<any>;
 }
 
 export function JoinDM(props: Props) {
   const { user, dispatch } = React.useContext(StoreContext);
   const [selectedUsers, setSelectedUser] = React.useState<User[]>([]);
+  const { data, loading, refetch } = useQuery(allUsersQuery, {
+    variables: { currentUserId: user.id, filter: '%' }
+  });
+  const client = useApolloClient();
   const onChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
     fetchData(e);
   };
-  const refectchRef = React.useRef<Function>();
   const fetchData = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-    (refectchRef as any).current({
+    refetch({
       currentUserId: user.id,
       filter: `%${e.target.value}%`
     });
   }, 300);
 
   function setMembership(users: User[]) {
-    props
-      .client!.query({
+    client
+      .query({
         query: checkMembership([user.id, ...users.map(user => user.id)])
       })
       .then((resp: any) => {
         if (resp.data.Chanel.length) {
           dispatch({
             type: Actions.SELECTED_CHANNEL,
-            payload: resp.data.Chanel[0]
+            payload: { ...resp.data.Chanel[0], direct: true }
           });
         } else {
-          props
-            .client!.mutate({
+          client
+            .mutate({
               mutation: createDMChannel([
                 user.id,
                 ...users.map(user => user.id)
@@ -89,9 +61,13 @@ export function JoinDM(props: Props) {
               }
             })
             .then(resp => {
+              console.log(resp);
               dispatch({
                 type: Actions.SELECTED_CHANNEL,
-                payload: resp.data.insert_Chanel.returning[0]
+                payload: {
+                  ...resp.data.insert_Chanel.returning[0],
+                  direct: true
+                }
               });
             });
         }
@@ -134,45 +110,31 @@ export function JoinDM(props: Props) {
             </UserDeleteTag>
           </UserTag>
         ))}
-        <Query
-          query={allUsersQuery}
-          variables={{ currentUserId: user.id, filter: '%' }}
-        >
-          {({ loading, error, data, refetch }: QueryResult) => {
-            refectchRef.current = refetch;
-            if (loading || !data) {
-              return <p>loading</p>;
-            }
-
-            return (
-              <>
-                <DataContainer>
-                  {data.User.map((user: { id: string; username: string }) => (
-                    <DataItem
-                      key={user.id}
-                      onClick={() =>
-                        setSelectedUser((prevState: User[]) => {
-                          if (prevState.find(us => us.id === user.id)) {
-                            return prevState;
-                          }
-                          return [
-                            ...prevState,
-                            { ...user, color: colors[random(0, 5)] }
-                          ];
-                        })
-                      }
-                    >
-                      @ {user.username}
-                    </DataItem>
-                  ))}
-                </DataContainer>
-              </>
-            );
-          }}
-        </Query>
+        {loading || !data ? (
+          <p>loading</p>
+        ) : (
+          <DataContainer>
+            {data.User.map((user: { id: string; username: string }) => (
+              <DataItem
+                key={user.id}
+                onClick={() =>
+                  setSelectedUser((prevState: User[]) => {
+                    if (prevState.find(us => us.id === user.id)) {
+                      return prevState;
+                    }
+                    return [
+                      ...prevState,
+                      { ...user, color: colors[random(0, 5)] }
+                    ];
+                  })
+                }
+              >
+                @ {user.username}
+              </DataItem>
+            ))}
+          </DataContainer>
+        )}
       </>
     </Modal>
   );
 }
-
-export const JoinDmComponent = withApollo(JoinDM);

@@ -37,14 +37,19 @@ interface UserPayload extends User {
 
 type SelectedChannelAction = {
   type: Actions.SELECTED_CHANNEL;
-  payload: { id: string; name: string; members: number };
+  payload: { id: string; name: string; members: number; direct: boolean };
 };
 type UserAction = { type: Actions.USER; payload: UserPayload };
 
 type Action = SelectedChannelAction | UserAction;
 
 interface State {
-  selectedChannel: { id: string; name: string; members: number } | null;
+  selectedChannel: {
+    id: string;
+    name: string;
+    members: number;
+    direct: boolean;
+  } | null;
   user: User;
   auth0: Auth0Client | null;
 }

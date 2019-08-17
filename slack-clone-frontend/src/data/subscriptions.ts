@@ -14,13 +14,23 @@ export const messageSubscription = gql`
 `;
 
 export const membershipSubscription = gql`
-  subscription SidebarSubscription {
-    Membership(where: { userId: { _eq: "user1" } }) {
+  subscription SidebarSubscription($user: String!) {
+    Chanel(where: { Memberships: { userId: { _eq: $user } } }) {
       id
-      direct
-      Chanel {
+      name
+      Memberships {
+        userId
+        direct
         id
-        name
+        User {
+          status
+          username
+        }
+      }
+      Memberships_aggregate {
+        aggregate {
+          count
+        }
       }
     }
   }

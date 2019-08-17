@@ -66,7 +66,10 @@ export function Channels({ channels }: ChanelProps) {
     name: string;
     members: number;
   }) => {
-    dispatch({ type: Actions.SELECTED_CHANNEL, payload: channel });
+    dispatch({
+      type: Actions.SELECTED_CHANNEL,
+      payload: { ...channel, direct: false }
+    });
   };
   return (
     <>

@@ -2,8 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Actions, StoreContext } from '../store/store';
 import { Item } from '../styles/SidebarItem.styles';
-import { Channel, Membership } from './Channels';
-import { JoinDmComponent } from './Sidebar/DMs/JoinDm.component';
+import { Channel } from './Channels';
+import { JoinDM } from './Sidebar/DMs/JoinDm.component';
 import { Status } from './Sidebar/Channels/Status.component';
 
 const MessagesTitles = styled.div`
@@ -39,13 +39,16 @@ export function DirectMessages({ channels }: DirectMessageProps) {
     name: string;
     members: number;
   }) => {
-    dispatch({ type: Actions.SELECTED_CHANNEL, payload: channel });
+    dispatch({
+      type: Actions.SELECTED_CHANNEL,
+      payload: { ...channel, direct: true }
+    });
   };
   function DMTitles(channel: Channel) {
     return channel.Memberships.reduce(
-      (acc, value: Membership) => {
+      (acc, value: any) => {
         if (value.userId !== user.id) {
-          return [...acc, value.userId];
+          return [...acc, value.User.username];
         }
         return acc;
       },
@@ -54,9 +57,7 @@ export function DirectMessages({ channels }: DirectMessageProps) {
   }
   return (
     <>
-      {isJoinDM ? (
-        <JoinDmComponent exitCallback={() => setDMModal(false)} />
-      ) : null}
+      {isJoinDM ? <JoinDM exitCallback={() => setDMModal(false)} /> : null}
       <MessagesTitles>
         <h2>Messages</h2>
         <i className="fas fa-plus" onClick={() => setDMModal(true)} />
@@ -74,7 +75,9 @@ export function DirectMessages({ channels }: DirectMessageProps) {
               onClick={() =>
                 selectChannel({
                   id: channel.id,
-                  name: channel.name,
+                  name: channel.Memberships.map(
+                    (membership: any) => membership.User.username
+                  ).join('-'),
                   members: channel.Memberships_aggregate.aggregate.count
                 })
               }

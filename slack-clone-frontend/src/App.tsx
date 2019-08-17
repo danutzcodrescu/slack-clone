@@ -5,7 +5,7 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import React from 'react';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-hooks';
 import { StoreContextProvider } from 'store/store';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'theme/theme';

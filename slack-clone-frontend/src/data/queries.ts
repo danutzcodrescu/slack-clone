@@ -24,6 +24,7 @@ export const membershipQuery = gql`
         id
         User {
           status
+          username
         }
       }
       Memberships_aggregate {

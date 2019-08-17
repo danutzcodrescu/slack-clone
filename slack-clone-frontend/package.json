@@ -14,6 +14,7 @@
   ],
   "private": true,
   "dependencies": {
+    "@apollo/react-hooks": "^3.0.1",
     "@auth0/auth0-spa-js": "^1.0.2",
     "apollo-cache-inmemory": "^1.6.0",
     "apollo-client": "^2.6.0",
@@ -26,7 +27,6 @@
     "history": "^4.9.0",
     "lodash": "^4.17.15",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "styled-components": "^4.2.0",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MainContentHeader } from './MainContentHeader';
 import styled from 'styled-components';
-import { MessageBox } from './MessageBox';
+import { MessageBox } from './MessageLayout/MessageBox';
 import { InputMessage } from './Input';
 
 const Container = styled.div`
