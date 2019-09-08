@@ -2,3 +2,4 @@
   base = "slack-clone-frontend/"
   publish = "slack-clone-frontend/build/"
   command = "yarn build"
+  functions = "functions"

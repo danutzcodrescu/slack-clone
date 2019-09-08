@@ -85,3 +85,6 @@ dist/
 
 .netlify/
 .vscode/
+
+# Local Netlify folder
+.netlify
