@@ -2,12 +2,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { StoreContext } from '../store/store';
 import { Input } from 'styles/Input.styles';
+import { SearchModal } from './Search/SearchModal';
 
 const Container = styled.div`
   position: fixed;
   top: 0;
   z-index: 5;
-  background-color: white;
+  background-color: ${props => props.theme.backgroundColorLight};
   width: calc(100vw - 220px);
   display: flex;
   flex-wrap: wrap;
@@ -25,12 +26,13 @@ const Title = styled.div`
   }
   i {
     margin-right: 0.5rem;
-    color: darkgrey;
+    color: ${props => props.theme.borderColorDark};
   }
 `;
 
 export function MainContentHeader() {
   const { selectedChannel } = React.useContext(StoreContext);
+  const [isModalOpen, setModalState] = React.useState<boolean>(false);
   return (
     <Container>
       <Title>
@@ -44,8 +46,13 @@ export function MainContentHeader() {
         </div>
       </Title>
       <div>
-        <Input type="text" placeholder="search" />
+        <Input
+          type="text"
+          placeholder="search"
+          onClick={() => setModalState(true)}
+        />
       </div>
+      <SearchModal isOpen={isModalOpen} toggleModal={setModalState} />
     </Container>
   );
 }

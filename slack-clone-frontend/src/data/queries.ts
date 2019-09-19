@@ -84,3 +84,23 @@ export const checkMembership = (usersId: string[]) => gql`
     }
   }
 `;
+
+export const searchMessages = gql`
+  query SearchMessageQuery($query: String!, $filters: String) {
+    Search(query: $query, filters: $filters) {
+      hits {
+        id
+        body
+        date
+        userId
+        channelId
+        _highlightResult {
+          body {
+            matchLevel
+            value
+          }
+        }
+      }
+    }
+  }
+`;
